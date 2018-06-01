@@ -86,7 +86,9 @@ class VerdaccioGithubAuth {
       return false;
     });
 
-    teams.push(forUser);
+    if (teams) {
+      teams.push(forUser);
+    }
 
     this.teamCache[forUser] = {
       teams,
