@@ -1,10 +1,24 @@
 import * as Octokit from '@octokit/rest';
 
-export class VerdaccioGithubAuth {
-  private org: string;
+interface IGithubConfig {
+  org?: string;
+  mode?: string;
+}
 
-  constructor(config: any = {}) {
+function VerdaccioGithubAuthWrapper(config, other): any {
+  return new VerdaccioGithubAuth(config, other);
+}
+
+class VerdaccioGithubAuth {
+  private org: string;
+  private mode: string;
+
+  constructor(config: any = {}, other: any = {}) {
     this.org = !!config.org ? config.org : '';
+    // Mode defaults to token.
+    this.mode = !!config.mode ? config.mode : 'token';
+
+    console.log(config);
   }
 
   /**
@@ -18,11 +32,13 @@ export class VerdaccioGithubAuth {
   public authenticate(username, password, callback) {
     let octokit = new Octokit();
 
-    octokit.authenticate({
-      type: 'token',
-      token: password
-    });
-
+    if (this.mode === 'token') {
+      octokit.authenticate({
+        type: 'token',
+        token: password
+      });  
+    }
+    
     octokit.users.getTeams({per_page: 100}).then(resp => {
       const teams = resp.data.filter((team) => {
         if (!this.org) {
@@ -37,4 +53,10 @@ export class VerdaccioGithubAuth {
       callback(null, false);
     });
   }
+
+  private validateMode() {
+
+  }
 }
+
+export = VerdaccioGithubAuthWrapper;

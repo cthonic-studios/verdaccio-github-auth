@@ -2,7 +2,7 @@
   "name": "verdaccio-github",
   "version": "1.0.0",
   "description": "Verdaccio Github Authentication Plugin",
-  "main": "src/index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "mocha -r ts-node/register src/**/*.spec.ts",
     "build": "rm -rf lib && tsc"
