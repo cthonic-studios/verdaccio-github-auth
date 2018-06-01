@@ -1,8 +1,15 @@
 import * as Octokit from '@octokit/rest';
+import * as moment from 'moment';
 
 interface IGithubConfig {
   org?: string;
   mode?: string;
+  cachettl?: number;
+}
+
+interface ITeamCache {
+  teams: string[];
+  ttl: moment.Moment;
 }
 
 function VerdaccioGithubAuthWrapper(config, other): any {
@@ -12,13 +19,20 @@ function VerdaccioGithubAuthWrapper(config, other): any {
 class VerdaccioGithubAuth {
   private org: string;
   private mode: string;
+  private cachettl: number;
 
-  constructor(config: any = {}, other: any = {}) {
-    this.org = !!config.org ? config.org : '';
+  private octokit: Octokit;
+  
+  // TODO: hook into a not-in-memory cache
+  private teamCache: any = {};
+
+  constructor(config: IGithubConfig = {}, other: any = {}) {
+    this.org = config.org || '';
     // Mode defaults to token.
-    this.mode = !!config.mode ? config.mode : 'token';
+    this.mode = config.mode || 'token';
+    this.cachettl = config.cachettl || 5;
 
-    console.log(config);
+    this.octokit = new Octokit();
   }
 
   /**
@@ -29,33 +43,69 @@ class VerdaccioGithubAuth {
    * @param password 
    * @param callback 
    */
-  public authenticate(username, password, callback) {
-    let octokit = new Octokit();
-
+  public async authenticate(username, password, callback): Promise<void> {
     if (this.mode === 'token') {
-      octokit.authenticate({
+      this.octokit.authenticate({
         type: 'token',
         token: password
-      });  
+      });
+    } else if (this.mode === 'basic') {
+      this.octokit.authenticate({
+        type: 'basic',
+        username: username,
+        password: password
+      });
     }
     
-    octokit.users.getTeams({per_page: 100}).then(resp => {
-      const teams = resp.data.filter((team) => {
+    const teams = await this.getUserTeams(username);
+    callback(null, teams);
+  }
+
+  /**
+   * 
+   * @todo Loop to grab all teams.
+   * @param bypassCache 
+   */
+  private async getUserTeams(forUser: string, bypassCache: boolean = false): Promise<any> {
+    let teams;
+    const cachedTeams = this.teamCache[forUser] as ITeamCache;
+
+    if (!bypassCache && cachedTeams && cachedTeams.ttl.isAfter()) {
+      return cachedTeams.teams;
+    }
+
+    teams = await this.octokit.users.getTeams({per_page: 100}).then(resp => {
+      return resp.data.filter((team) => {
         if (!this.org) {
           return true;
         }
 
         return team.organization.login == this.org;
       }).map((team) => team.slug);
-      
-      callback(null, teams);
     }).catch(err => {
-      callback(null, false);
+      return false;
     });
+
+    this.teamCache[forUser] = {
+      teams,
+      ttl: moment().add(this.cachettl, 'minutes'),
+    }
+
+    return this.teamCache[forUser].teams;
   }
 
-  private validateMode() {
+  /**
+   * Validates whether or not a given mode is valid
+   * 
+   * @param {String} mode
+   */
+  private validateMode(mode: string) {
+    const validMethods = [
+      'token',
+      'basic',
+    ];
 
+    return validMethods.indexOf(mode) > -1;
   }
 }
 
