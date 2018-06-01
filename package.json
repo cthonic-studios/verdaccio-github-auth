@@ -1,6 +1,6 @@
 {
   "name": "verdaccio-github-auth",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "description": "Verdaccio Github Authentication Plugin",
   "main": "lib/index.js",
   "scripts": {

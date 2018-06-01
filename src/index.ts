@@ -86,7 +86,7 @@ class VerdaccioGithubAuth {
       return false;
     });
 
-    if (teams) {
+    if (teams !== false) {
       teams.push(forUser);
     }
 
