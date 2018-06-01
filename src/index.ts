@@ -86,6 +86,8 @@ class VerdaccioGithubAuth {
       return false;
     });
 
+    teams.push(forUser);
+
     this.teamCache[forUser] = {
       teams,
       ttl: moment().add(this.cachettl, 'minutes'),
