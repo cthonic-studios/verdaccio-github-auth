@@ -3,13 +3,13 @@ import 'mocha';
 
 declare var process;
 
-import {VerdaccioGithubAuth} from './index';
+import VerdaccioGithubAuthWrapper = require('./index');
 
 describe('Newton Person', () => {
-  let client: VerdaccioGithubAuth;
+  let client;
 
   beforeEach(() => {
-    client = new VerdaccioGithubAuth({org: 'pfizer'});
+    client = VerdaccioGithubAuthWrapper({org: 'pfizer'}, {});
   })
 
   it('should produce the Auth Client', () => {
@@ -19,11 +19,16 @@ describe('Newton Person', () => {
   it('should return teams', (done) => {
 
     client.authenticate(process.env.GITHUB_USERNAME, process.env.GITHUB_TOKEN, (a, teams) => {
-      console.log(teams);
-
       expect(teams).to.not.be.empty;
       done();
     });
   });
 
+  it('should not allow bad authentication', (done) => {
+    client.adduser(process.env.GITHUB_USERNAME, 'thisisnotthetokenyouareafter', (err, good) => {
+      expect(err).to.be.a.instanceof(Error);
+      expect(good).to.be.false;
+      done();
+    });
+  });
 });
