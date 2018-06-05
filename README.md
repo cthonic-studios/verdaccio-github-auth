@@ -1,5 +1,7 @@
 # verdaccio-github-auth
 
+![Travis Build Status](https://travis-ci.org/cthos/verdaccio-github-auth.svg?branch=master)
+
 > ⚠ WARNING - This is an experimental plugin!!
 
 This is a simple Github Authentication plugin for verdaccio. 
