@@ -5,7 +5,7 @@ declare var process;
 
 import VerdaccioGithubAuthWrapper = require('./index');
 
-describe('Newton Person', () => {
+describe('Verdaccio Github Auth', () => {
   let client;
 
   beforeEach(() => {
