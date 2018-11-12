@@ -9,18 +9,26 @@ describe('Verdaccio Github Auth', () => {
   let client;
 
   beforeEach(() => {
-    client = VerdaccioGithubAuthWrapper({org: 'pfizer'}, {});
+    client = VerdaccioGithubAuthWrapper({org: 'volcano'}, {});
   })
 
   it('should produce the Auth Client', () => {
     expect(client).to.exist;
   });
 
-  it('should return teams', (done) => {
+  it('should return teams', async () => {
+    client.authenticate(process.env.GITHUB_USERNAME, process.env.GITHUB_TOKEN, (a, teams) => {
+      expect(teams).to.not.be.empty;
+      expect(teams.length).to.equal(3);
+    });
+  });
+
+  it('should return teams with no org set.', async () => {
+    client = VerdaccioGithubAuthWrapper({org: null}, {});
 
     client.authenticate(process.env.GITHUB_USERNAME, process.env.GITHUB_TOKEN, (a, teams) => {
       expect(teams).to.not.be.empty;
-      done();
+      expect(teams.length).to.be.greaterThan(3);
     });
   });
 
