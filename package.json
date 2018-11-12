@@ -1,6 +1,6 @@
 {
   "name": "verdaccio-github-auth",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Verdaccio Github Authentication Plugin",
   "main": "lib/index.js",
   "scripts": {
@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/cthos/verdaccio-github-auth#readme",
   "dependencies": {
-    "@octokit/rest": "15.8.0",
+    "@octokit/rest": "15.17.0",
     "http-errors": "1.6.3",
     "moment": "^2.22.1"
   },

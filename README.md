@@ -31,5 +31,4 @@ github-auth:
 
 ## Current Limitations
 
-* The Team call doesn't currently iterate, so if you are a member of more than 100 teams, it won't load them all (Willfix)
 * Teams are cached in Memory, so a lot of users could result in high memory usage and I've not profiled the impact.

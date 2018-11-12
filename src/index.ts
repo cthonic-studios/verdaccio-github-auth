@@ -112,18 +112,27 @@ class VerdaccioGithubAuth {
     if (!bypassCache && cachedTeams && cachedTeams.ttl.isAfter()) {
       return cachedTeams.teams;
     }
+    let data = [];
 
-    teams = await this.octokit.users.getTeams({per_page: 100}).then(resp => {
-      return resp.data.filter((team) => {
-        if (!this.org) {
-          return true;
-        }
+    try {
+      let resp = await this.octokit.users.getTeams({per_page: 100})
+      data = resp.data;
 
-        return team.organization.login == this.org;
-      }).map((team) => team.slug);
-    }).catch(err => {
+      while (this.octokit.hasNextPage(resp)) {
+        resp = await this.octokit.getNextPage(resp);
+        data = data.concat(resp.data);
+      }
+    } catch (e) {
       return false;
-    });
+    }
+
+    teams = data.filter((team) => {
+      if (!this.org) {
+        return true;
+      }
+
+      return team.organization.login == this.org;
+    }).map((team) => team.slug);
 
     if (teams !== false) {
       teams.push(forUser);
