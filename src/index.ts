@@ -1,11 +1,13 @@
 import * as Octokit from '@octokit/rest';
 import * as moment from 'moment';
 import * as HTTPError from 'http-errors';
+import { access } from 'fs';
 
 interface IGithubConfig {
   org?: string;
   mode?: string;
   cachettl?: number;
+  orgmode?: boolean;
 }
 
 interface ITeamCache {
@@ -21,6 +23,7 @@ class VerdaccioGithubAuth {
   private org: string;
   private mode: string;
   private cachettl: number;
+  private orgmode: boolean;
 
   private octokit: Octokit;
 
@@ -34,6 +37,7 @@ class VerdaccioGithubAuth {
     // Mode defaults to token.
     this.mode = config.mode || 'token';
     this.cachettl = config.cachettl || 5;
+    this.orgmode = config.orgmode || false;
 
     this.octokit = new Octokit();
   }
@@ -136,6 +140,23 @@ class VerdaccioGithubAuth {
 
     if (teams !== false) {
       teams.push(forUser);
+    }
+
+    // Append orgs to the team list if orgmode is on.
+    if (this.orgmode) {
+      const orgs = data
+        .map(team => `org:${team.organization.login}`)
+        .reduce((acc, v) => {
+          if (acc.indexOf(v) === -1) {
+            acc.push(v);
+          }
+
+          return acc;
+        }, []);
+
+      if (orgs) {
+        teams = teams.concat(orgs);
+      }
     }
 
     this.teamCache[forUser] = {
