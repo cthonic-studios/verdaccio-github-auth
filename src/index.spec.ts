@@ -32,6 +32,24 @@ describe('Verdaccio Github Auth', () => {
     });
   });
 
+  it('should not return orgs if orgmode is off.', async () => {
+    client = VerdaccioGithubAuthWrapper({org: null, orgmode: false}, {});
+
+    client.authenticate(process.env.GITHUB_USERNAME, process.env.GITHUB_TOKEN, (a, teams) => {
+      expect(teams).to.not.be.empty;
+      expect(teams).to.not.contain('org:volcano');
+    });
+  });
+
+  it('should return orgs if orgmode is on.', async () => {
+    client = VerdaccioGithubAuthWrapper({org: null, orgmode: true}, {});
+
+    client.authenticate(process.env.GITHUB_USERNAME, process.env.GITHUB_TOKEN, (a, teams) => {
+      expect(teams).to.not.be.empty;
+      expect(teams).to.contain('org:volcano');
+    });
+  });
+
   it('should not allow bad authentication', (done) => {
     client.adduser(process.env.GITHUB_USERNAME, 'thisisnotthetokenyouareafter', (err, good) => {
       expect(err).to.be.a.instanceof(Error);
