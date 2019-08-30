@@ -1,8 +1,12 @@
 # Changelog
 
-## 1.0.3
+## 1.0.4
 
 * Fixes `lodash` security vulnerability.
+
+## 1.0.3 (unpublished)
+
+Build command didn't run, bad publish.
 
 ## 1.0.2
 

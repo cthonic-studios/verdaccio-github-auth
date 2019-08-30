@@ -1,11 +1,12 @@
 {
   "name": "verdaccio-github-auth",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Verdaccio Github Authentication Plugin",
   "main": "lib/index.js",
   "scripts": {
     "test": "mocha -r ts-node/register src/**/*.spec.ts",
-    "build": "rm -rf lib && tsc"
+    "build": "rm -rf lib && tsc",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
