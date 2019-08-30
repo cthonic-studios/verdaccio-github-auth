@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.3
+
+* Fixes `lodash` security vulnerability.
+
 ## 1.0.2
 
 * Adds `orgmode` parameter which will append the org name to the team list as `org:${orgname}`.
