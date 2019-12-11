@@ -8,6 +8,7 @@ interface IGithubConfig {
   mode?: string;
   cachettl?: number;
   orgmode?: boolean;
+  octokit?: Octokit.Options;
 }
 
 interface ITeamCache {
@@ -24,6 +25,7 @@ class VerdaccioGithubAuth {
   private mode: string;
   private cachettl: number;
   private orgmode: boolean;
+  private octokitOptions: Octokit.Options;
 
   private octokit: Octokit;
 
@@ -38,8 +40,9 @@ class VerdaccioGithubAuth {
     this.mode = config.mode || 'token';
     this.cachettl = config.cachettl || 5;
     this.orgmode = config.orgmode || false;
+    this.octokitOptions = config.octokit || null;
 
-    this.octokit = new Octokit();
+    this.octokit = new Octokit(this.octokitOptions);
   }
 
   /**
