@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
+import * as nock from 'nock';
 
 declare var process;
 
@@ -54,6 +55,20 @@ describe('Verdaccio Github Auth', () => {
     client.adduser(process.env.GITHUB_USERNAME, 'thisisnotthetokenyouareafter', (err, good) => {
       expect(err).to.be.a.instanceof(Error);
       expect(good).to.be.false;
+      done();
+    });
+  });
+
+  it('should authenticate against custom Github URL', (done: (error?: any) => void) => {
+    nock('http://localhost/api/v3')
+        .get('/user')
+        .reply(200, 'Ok');
+
+    client = VerdaccioGithubAuthWrapper({octokit: {baseUrl: 'http://localhost/api/v3'}}, {});
+    client.adduser(process.env.GITHUB_USERNAME, process.env.GITHUB_TOKEN, (a, teams) => {
+      expect(a).to.be.null;
+      expect(teams).to.be.true;
+
       done();
     });
   });
