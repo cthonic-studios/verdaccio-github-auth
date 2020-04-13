@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.5
+
+* Add `octokit` configuration option for overriding Github options
+
 ## 1.0.4
 
 * Fixes `lodash` security vulnerability.
