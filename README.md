@@ -13,6 +13,10 @@ github-auth:
      cachettl: 5 # OPTIONAL: How long to cache the user's teams in minutes. DEFAULT: 5
      orgmode: true # OPTIONAL: allow orgs to be placed in the `access` stanza.
 
+    octokit: { # OPTIONAL: Configuration options to override Octokit
+        baseUrl: https://git.myorg.com/v3 # The endpoint to use for the Github API
+    }
+
 
     '**':
     # Access is determined by team permissions, but github username is also valid.
