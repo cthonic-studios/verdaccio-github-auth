@@ -28,7 +28,7 @@ describe('Verdaccio Github Auth', () => {
 
     client.authenticate(process.env.GITHUB_USERNAME, process.env.GITHUB_TOKEN, (a, teams) => {
       expect(teams).to.not.be.empty;
-      expect(teams.length).to.be.greaterThan(3);
+      expect(teams.length).to.be.greaterThan(2);
     });
   });
 
