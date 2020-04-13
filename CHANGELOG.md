@@ -2,7 +2,7 @@
 
 ## 1.0.5
 
-* Add `octokit` configuration option for overriding Github options
+* Add `octokit` configuration option for overriding Github options (#8, thanks 9ae8sdf76!)
 
 ## 1.0.4
 
