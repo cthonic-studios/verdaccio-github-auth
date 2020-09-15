@@ -1,3 +1,9 @@
+# ⚠ THIS REPO HAS MOVED TO GITLAB
+
+[https://gitlab.com/cthonic-studios/verdaccio-github-auth](https://gitlab.com/cthonic-studios/verdaccio-github-auth)
+
+I will no longer be maintaining the project on Github.
+
 # verdaccio-github-auth
 
 ![Travis Build Status](https://travis-ci.org/cthonic-studios/verdaccio-github-auth.svg?branch=master)
